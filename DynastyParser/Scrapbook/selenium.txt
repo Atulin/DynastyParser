@@ -1,0 +1,24 @@
+﻿                driver.Navigate().GoToUrl(chapterUrl + href);
+
+                var base64string = driver.ExecuteScript(@"
+                    var c = document.createElement('canvas');
+                    var ctx = c.getContext('2d');
+                    var img = document.getElementById('image').getElementsByTagName('img')[0];
+                    c.height=img.height;
+                    c.width=img.width;
+                    ctx.drawImage(img, 0, 0,img.width, img.height);
+                    var base64String = c.toDataURL();
+                    return base64String;
+                    ") as string;
+
+                var base64 = base64string.Split(',').Last();
+                using (var stream = new MemoryStream(Convert.FromBase64String(base64)))
+                {
+                    using (var bitmap = new Bitmap(stream))
+                    {
+                        var filepath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                            chapterUrl.Split('/').Last(),
+                            $"{current++}.png");
+                        bitmap.Save(filepath, ImageFormat.Png);
+                    }
+                }
