@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DynastyParser.Classes
 {
@@ -22,6 +23,16 @@ namespace DynastyParser.Classes
                 outList.Add(list[i]);
             }
             return outList;
+        }
+
+        public static string Join(this string[] array, string separator)
+        {
+            return string.Join(separator, array);
+        }
+
+        public static string Join(this List<string> array, string separator)
+        {
+            return string.Join(separator, array);
         }
     }
 }

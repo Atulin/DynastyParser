@@ -5,11 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DynastyParser"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:converters="clr-namespace:DynastyParser.Converters"
         mc:Ignorable="d"
-        Title="DynastyParser" Height="450" Width="800">
+        Title="Dynasty Scrape&amp;Glue" Height="450" Width="800">
     <Window.Style>
         <Style TargetType="Window" BasedOn="{StaticResource {x:Type Window}}"/>
     </Window.Style>
+
+    <Window.Resources>
+        <converters:FileNameFromPathConverter x:Key="FileNameFromPath"></converters:FileNameFromPathConverter>
+    </Window.Resources>
 
     <TabControl>
 
@@ -29,7 +34,7 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Name="UrlTextBox" Grid.Column="1">https://dynasty-scans.com/series/ouji_sama_nante_iranai</TextBox>
+                    <TextBox Name="UrlTextBox" Grid.Column="1"></TextBox>
                     <Button Name="ScrapeButton"
                             Click="ScrapeButton_OnClick"
                             Grid.Column="2">
@@ -41,23 +46,119 @@
                 <TextBox Name="ScrapeResultsTextBox"
                          Grid.Row="2"
                          IsReadOnly="True"
+                         FontFamily="Consolas"
                          HorizontalScrollBarVisibility="Auto"
                          VerticalScrollBarVisibility="Auto"
                          VerticalContentAlignment="Top">
-                    Test
                 </TextBox>
 
             </Grid>
         </TabItem>
 
         <TabItem Header="Glue">
+            <Grid AllowDrop="True"
+                  Drop="OnDropImages">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="23*"/>
+                    <ColumnDefinition Width="763*"/>
+                </Grid.ColumnDefinitions>
 
+                <TextBlock Name="DragHereText" 
+                           Text="Drag images here"
+                           FontSize="30"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Foreground="#33FFFFFF" Grid.Column="1"></TextBlock>
+
+                <ListBox Name="ImageGrid"
+                         SelectionMode="Extended" Grid.ColumnSpan="2">
+
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Width="100"
+                                  VerticalAlignment="Center">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition Height="20"/>
+                                </Grid.RowDefinitions>
+                                <Image Source="{Binding}"
+                                       Width="100"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       Stretch="UniformToFill"></Image>
+                                <TextBlock Grid.Row="1"
+                                           VerticalAlignment="Center"
+                                           TextAlignment="Center"
+                                           Text="{Binding Converter={StaticResource FileNameFromPath}}"></TextBlock>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="5" VerticalAlignment="Center"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+
+                </ListBox>
+
+                <Border Width="32" Height="32"
+                        VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                        Margin="0,0,10,65"
+                        CornerRadius="25" Grid.Column="1"
+                        ToolTip="Glue selected images">
+                    <Border.Clip>
+                        <RectangleGeometry RadiusX="25" RadiusY="25" Rect="1,1,30,30"/>
+                    </Border.Clip>
+                    <Button Name="GlueButton"
+                            Click="GlueButton_OnClick"
+                            BorderBrush="{x:Null}">
+                        <iconPacks:PackIconMaterial Kind="Select" />
+                    </Button>
+                </Border>
+
+                <Border Width="52" Height="52"
+                        VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                        Margin="0,0,10,10"
+                        CornerRadius="25" Grid.Column="1"
+                        ToolTip="Glue all images">
+                    <Border.Clip>
+                        <RectangleGeometry RadiusX="25" RadiusY="25" Rect="1,1,50,50"/>
+                    </Border.Clip>
+                    <Button Name="GlueAllButton"
+                            Click="GlueAllButton_OnClick"
+                            BorderBrush="{x:Null}">
+                        <iconPacks:PackIconMaterial Kind="SelectAll" />
+                    </Button>
+                </Border>
+
+            </Grid>
         </TabItem>
 
         <TabItem>
             <TabItem.Header>
                 <iconPacks:PackIconMaterialLight Kind="Cog" />
             </TabItem.Header>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <ToggleButton Name="DarkModeToggleButton"
+                              Click="DarkModeToggleButton_OnClick"
+                              Grid.Column="1"
+                              Content="On"></ToggleButton>
+                <TextBlock Grid.Column="3" Grid.Row="0" VerticalAlignment="Center">
+                    Dark mode toggle
+                </TextBlock>
+
+            </Grid>
         </TabItem>
 
     </TabControl>

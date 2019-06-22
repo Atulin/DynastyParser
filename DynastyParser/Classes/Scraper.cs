@@ -8,6 +8,7 @@ using System.Net;
 using HtmlAgilityPack;
 using ScrapySharp.Extensions;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DynastyParser.Classes
 {
